@@ -1,0 +1,29 @@
+create table student
+( sl_no serial not null,
+student_id varchar(10),
+student_name varchar(10),
+gender varchar(6)
+);
+
+alter
+	
+create table audit
+(id serial not null,
+student_id varchar(10),
+entrydate timestamp);
+
+create or replace function audit_log() returns trigger  as $student$
+begin
+insert into audit ( student_id, entrydate) values ( new.student_id,current_timestamp);
+return new;
+end;
+$student$ language plpgsql;
+
+create or replace trigger audit_tgr after insert on student
+for each row execute procedure audit_log();
+
+insert into student (student_id,student_name,gender) values ('D123', 'Shyam','Male');
+
+select * from student
+
+select * from audit
